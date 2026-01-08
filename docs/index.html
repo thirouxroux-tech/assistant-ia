@@ -1,11 +1,109 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>TEST OK</title>
+  <meta charset="UTF-8" />
+  <title>Assistant IA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6fb;
+      margin: 0;
+      padding: 0;
+    }
+    .app {
+      max-width: 500px;
+      margin: 40px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #4f46e5;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+    button {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      background: #4f46e5;
+      color: white;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .response {
+      margin-top: 15px;
+      padding: 10px;
+      background: #eef2ff;
+      border-radius: 5px;
+    }
+    ul {
+      margin-top: 15px;
+      padding-left: 20px;
+    }
+    li {
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+  </style>
 </head>
+
 <body>
-  <h1>🎉 SI TU VOIS CE TEXTE, ÇA MARCHE 🎉</h1>
-  <p>GitHub Pages sert maintenant le bon dossier.</p>
+  <div class="app">
+    <h1>Assistant IA</h1>
+
+    <p>Pose une question :</p>
+    <input id="question" placeholder="Ex : Comment mieux m'organiser ?" />
+    <button onclick="repondre()">Envoyer</button>
+
+    <div class="response" id="reponse"></div>
+
+    <h3>Historique</h3>
+    <ul id="historique"></ul>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const input = document.getElementById("question");
+      const reponse = document.getElementById("reponse");
+      const list = document.getElementById("historique");
+
+      let historique = JSON.parse(localStorage.getItem("historique")) || [];
+
+      function afficher() {
+        list.innerHTML = "";
+        historique.forEach(q => {
+          const li = document.createElement("li");
+          li.textContent = q;
+          list.appendChild(li);
+        });
+      }
+
+      window.repondre = function () {
+        const q = input.value.trim();
+        if (!q) return alert("Écris une question");
+
+        historique.push(q);
+        localStorage.setItem("historique", JSON.stringify(historique));
+
+        reponse.innerText = "Tu as demandé : " + q;
+        input.value = "";
+        afficher();
+      };
+
+      afficher();
+    });
+  </script>
 </body>
 </html>
+
