@@ -74,6 +74,7 @@
     <p>Pose une question :</p>
     <input id="question" placeholder="Ex : Comment mieux m'organiser ?" />
     <button onclick="repondre()">Envoyer</button>
+<button onclick="effacer()">Effacer l’historique</button>
 
     <div class="response" id="reponse"></div>
 
@@ -99,19 +100,29 @@
       }
 
       window.repondre = function () {
-        const q = input.value.trim();
+       if (historique.length >= 5) {
+  alert("Version gratuite : 5 questions maximum.");
+  return;
+}
+ const q = input.value.trim();
         if (!q) return alert("Écris une question");
 
         historique.push(q);
         localStorage.setItem("historique", JSON.stringify(historique));
 
-        reponse.innerText = "Tu as demandé : " + q;
+        reponse.innerText = "🤖 J’ai bien reçu ta question : " + q;
+
         input.value = "";
         afficher();
       };
 
       afficher();
-    });
+    });window.effacer = function () {
+  localStorage.removeItem("historique");
+  document.getElementById("historique").innerHTML = "";
+  document.getElementById("reponse").innerText = "";
+};
+
   </script>
 </body>
 </html>
