@@ -1,160 +1,92 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head><link rel="manifest" href="manifest.json">
-
-  <meta charset="UTF-8" />
+<head>
+  <meta charset="UTF-8">
   <title>Assistant IA</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f4f6fb;
-      margin: 0;
-      padding: 0;
+      background: #f4f4f4;
+      padding: 20px;
     }
-    .app {
+
+    .application {
       max-width: 500px;
-      margin: 40px auto;
+      margin: auto;
       background: white;
       padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      border-radius: 8px;
     }
-    h1 {
-      text-align: center;
-      color: #4f46e5;
+
+    button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+      font-size: 16px;
+      cursor: pointer;
     }
+
     input {
       width: 100%;
       padding: 10px;
-      margin-top: 10px;
-      font-size: 16px;
+      margin: 10px 0;
     }
-    button {
-      width: 100%;
-      margin-top: 10px;
-      padding: 10px;
-      background: #4f46e5;
-      color: white;
-      border: none;
-      font-size: 16px;
-      cursor: pointer;
-      border-radius: 5px;
-    }
-    .response {
-      margin-top: 15px;
-      padding: 10px;
-      background: #eef2ff;
-      border-radius: 5px;
-    }
-    ul {
-      margin-top: 15px;
-      padding-left: 20px;
-    }
-    li {
-      font-size: 14px;
-      margin-bottom: 5px;
+
+    #outil {
+      display: none;
     }
   </style>
 </head>
-<script>
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.register("./service-worker.js");
-    });
-  }
-</script>
-
 
 <body>
- <div class="application">
+
+<div class="application">
   <h1>Assistant IA</h1>
 
+  <!-- ACCUEIL -->
   <div id="accueil">
     <p>Que voulez-vous faire ?</p>
 
-    <button onclick="ouvrirOutil('texte')">✍️ Écrire un texte</button>
+    <button onclick="ouvrirOutil()">✍️ Écrire un texte</button>
     <button disabled>📩 Répondre à un email</button>
     <button disabled>📄 Résumer un texte</button>
     <button disabled>💡 Trouver des idées</button>
   </div>
 
-  <div id="outil" style="display:none;">
+  <!-- OUTIL -->
+  <div id="outil">
     <p>Posez une question :</p>
-    <input id="question">
+    <input id="question" placeholder="Ex : écris un texte simple">
+
     <button onclick="repondre()">Envoyer</button>
-    <button onclick="effacer()">Effacer l'historique</button>
+    <button onclick="retour()">⬅ Retour</button>
 
-    <div id="reponse"></div>
-
-    <h3>Historique</h3>
-    <ul id="historique"></ul>
+    <div id="reponse" style="margin-top:15px;"></div>
   </div>
 </div>
 
-
-    <h3>Historique</h3>
-    <ul id="historique"></ul>
-  </div>
-
-  <script>
-    document.getElementById("reponse").innerText =
-      "✍️ Outil : Écriture de texte";
-  }
-};
-
-    document.addEventListener("DOMContentLoaded", () => {
-      const input = document.getElementById("question");
-      const reponse = document.getElementById("reponse");
-      const list = document.getElementById("historique");
-
-      let historique = JSON.parse(localStorage.getItem("historique")) || [];
-
-      function afficher() {
-        list.innerHTML = "";
-        historique.forEach(q => {
-          const li = document.createElement("li");
-          li.textContent = q;
-          list.appendChild(li);
-        });
-      }
-
-      window.repondre = function () {
-       if (historique.length >= 5) {
-  alert("Version gratuite : 5 questions maximum.");
-  return;
-}
- const q = input.value.trim();
-        if (!q) return alert("Écris une question");
-
-        historique.push(q);
-        localStorage.setItem("historique", JSON.stringify(historique));
-
-        reponse.innerText = "🤖 J’ai bien reçu ta question : " + q;
-
-        input.value = "";
-        afficher();
-      };
-
-      afficher();
-    });window.effacer = function () {
-  localStorage.removeItem("historique");
-  document.getElementById("historique").innerHTML = "";
-  document.getElementById("reponse").innerText = "";
-};
-
-function ouvrirOutil(type) {
+<script>
+function ouvrirOutil() {
   document.getElementById("accueil").style.display = "none";
   document.getElementById("outil").style.display = "block";
+}
 
-  if (type === "texte") {
-    document.getElementById("reponse").innerText =
-      "✍️ Outil : Écriture de texte";
-  }
+function retour() {
+  document.getElementById("outil").style.display = "none";
+  document.getElementById("accueil").style.display = "block";
+}
+
+function repondre() {
+  const question = document.getElementById("question").value;
+  document.getElementById("reponse").innerText =
+    "Vous avez demandé : " + question;
 }
 </script>
 
 </body>
 </html>
+
 
