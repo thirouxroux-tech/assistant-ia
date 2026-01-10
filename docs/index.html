@@ -68,23 +68,31 @@
 
 
 <body>
-  <div class="app">
-    <h1>Assistant IA</h1>
-<div id="accueil">
-  <p>Que voulez-vous faire ?</p>
+ <div class="application">
+  <h1>Assistant IA</h1>
 
-  <button onclick="ouvrirOutil('texte')">✍️ Écrire un texte</button>
-  <button disabled>📩 Répondre à un email</button>
-  <button disabled>📄 Résumer un texte</button>
-  <button disabled>💡 Trouver des idées</button>
+  <div id="accueil">
+    <p>Que voulez-vous faire ?</p>
+
+    <button onclick="ouvrirOutil('texte')">✍️ Écrire un texte</button>
+    <button disabled>📩 Répondre à un email</button>
+    <button disabled>📄 Résumer un texte</button>
+    <button disabled>💡 Trouver des idées</button>
+  </div>
+
+  <div id="outil" style="display:none;">
+    <p>Posez une question :</p>
+    <input id="question">
+    <button onclick="repondre()">Envoyer</button>
+    <button onclick="effacer()">Effacer l'historique</button>
+
+    <div id="reponse"></div>
+
+    <h3>Historique</h3>
+    <ul id="historique"></ul>
+  </div>
 </div>
 
-    <p>Pose une question :</p>
-   <div id="outil" style="display:none;"> <input id="question" placeholder="Ex : Comment mieux m'organiser ?" />
-    <button onclick="repondre()">Envoyer</button>
-<button onclick="effacer()">Effacer l’historique</button></div>
-
-    <div class="response" id="reponse"></div>
 
     <h3>Historique</h3>
     <ul id="historique"></ul>
@@ -135,7 +143,8 @@
   document.getElementById("historique").innerHTML = "";
   document.getElementById("reponse").innerText = "";
 };
-window.ouvrirOutil = function(type) {
+<script>
+function ouvrirOutil(type) {
   document.getElementById("accueil").style.display = "none";
   document.getElementById("outil").style.display = "block";
 
@@ -143,9 +152,9 @@ window.ouvrirOutil = function(type) {
     document.getElementById("reponse").innerText =
       "✍️ Outil : Écriture de texte";
   }
-};
+}
+</script>
 
-  </script>
 </body>
 </html>
 
