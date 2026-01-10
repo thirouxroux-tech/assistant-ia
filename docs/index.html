@@ -70,11 +70,19 @@
 <body>
   <div class="app">
     <h1>Assistant IA</h1>
+<div id="accueil">
+  <p>Que voulez-vous faire ?</p>
+
+  <button onclick="ouvrirOutil('texte')">✍️ Écrire un texte</button>
+  <button disabled>📩 Répondre à un email</button>
+  <button disabled>📄 Résumer un texte</button>
+  <button disabled>💡 Trouver des idées</button>
+</div>
 
     <p>Pose une question :</p>
-    <input id="question" placeholder="Ex : Comment mieux m'organiser ?" />
+   <div id="outil" style="display:none;"> <input id="question" placeholder="Ex : Comment mieux m'organiser ?" />
     <button onclick="repondre()">Envoyer</button>
-<button onclick="effacer()">Effacer l’historique</button>
+<button onclick="effacer()">Effacer l’historique</button></div>
 
     <div class="response" id="reponse"></div>
 
@@ -83,6 +91,11 @@
   </div>
 
   <script>
+    document.getElementById("reponse").innerText =
+      "✍️ Outil : Écriture de texte";
+  }
+};
+
     document.addEventListener("DOMContentLoaded", () => {
       const input = document.getElementById("question");
       const reponse = document.getElementById("reponse");
@@ -121,6 +134,15 @@
   localStorage.removeItem("historique");
   document.getElementById("historique").innerHTML = "";
   document.getElementById("reponse").innerText = "";
+};
+window.ouvrirOutil = function(type) {
+  document.getElementById("accueil").style.display = "none";
+  document.getElementById("outil").style.display = "block";
+
+  if (type === "texte") {
+    document.getElementById("reponse").innerText =
+      "✍️ Outil : Écriture de texte";
+  }
 };
 
   </script>
