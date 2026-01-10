@@ -82,6 +82,8 @@
 <button onclick="retour()">⬅ Retour</button>
 
 <div id="reponse" style="margin-top:15px;"></div>
+<h3>Historique</h3>
+<ul id="historique"></ul>
 
   </div>
 </div>
@@ -111,7 +113,8 @@ function repondre() {
     document.getElementById("reponse").innerText =
       "Merci de remplir au moins le sujet et le destinataire.";
     return;
-  }
+ sauvegarderHistorique(texte);
+ }
 
   let texte = "";
 
@@ -134,6 +137,31 @@ function repondre() {
 
   document.getElementById("reponse").innerText = texte;
 }
+let historique = JSON.parse(localStorage.getItem("historiqueTextes")) || [];
+
+function sauvegarderHistorique(texte) {
+  historique.unshift(texte);
+  localStorage.setItem("historiqueTextes", JSON.stringify(historique));
+  afficherHistorique();
+}
+
+function afficherHistorique() {
+  const ul = document.getElementById("historique");
+  ul.innerHTML = "";
+
+  historique.forEach((texte, index) => {
+    const li = document.createElement("li");
+    li.style.cursor = "pointer";
+    li.style.marginBottom = "10px";
+    li.innerText = texte.slice(0, 40) + "...";
+    li.onclick = () => {
+      document.getElementById("reponse").innerText = texte;
+    };
+    ul.appendChild(li);
+  });
+}
+
+window.onload = afficherHistorique;
 
 </script>
 
