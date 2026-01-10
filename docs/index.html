@@ -58,13 +58,31 @@
 
   <!-- OUTIL -->
   <div id="outil">
-    <p>Posez une question :</p>
-    <input id="question" placeholder="Ex : écris un texte simple">
+   <h2>✍️ Écrire un texte</h2>
 
-    <button onclick="repondre()">Envoyer</button>
-    <button onclick="retour()">⬅ Retour</button>
+<label>Sujet du texte</label>
+<input id="sujet" placeholder="Ex : demande de rendez-vous">
 
-    <div id="reponse" style="margin-top:15px;"></div>
+<label>À qui s’adresse le texte</label>
+<input id="destinataire" placeholder="Ex : mon employeur">
+
+<label>Ton du texte</label>
+<select id="ton">
+  <option value="simple">Simple</option>
+  <option value="formel">Formel</option>
+</select>
+
+<label>Longueur</label>
+<select id="longueur">
+  <option value="court">Court</option>
+  <option value="moyen">Moyen</option>
+</select>
+
+<button onclick="genererTexte()">Générer le texte</button>
+<button onclick="retour()">⬅ Retour</button>
+
+<div id="reponse" style="margin-top:15px;"></div>
+
   </div>
 </div>
 
@@ -83,7 +101,40 @@ function repondre() {
   const question = document.getElementById("question").value;
   document.getElementById("reponse").innerText =
     "Vous avez demandé : " + question;
+}function genererTexte() {
+  const sujet = document.getElementById("sujet").value;
+  const destinataire = document.getElementById("destinataire").value;
+  const ton = document.getElementById("ton").value;
+  const longueur = document.getElementById("longueur").value;
+
+  if (!sujet || !destinataire) {
+    document.getElementById("reponse").innerText =
+      "Merci de remplir au moins le sujet et le destinataire.";
+    return;
+  }
+
+  let texte = "";
+
+  if (ton === "formel") {
+    texte += "Bonjour,\n\n";
+  } else {
+    texte += "Bonjour,\n\n";
+  }
+
+  texte +=
+    "Je vous écris concernant " + sujet +
+    ". Ce message s’adresse à " + destinataire + ".\n\n";
+
+  if (longueur === "moyen") {
+    texte +=
+      "Je souhaite vous apporter davantage de précisions à ce sujet et reste disponible pour toute information complémentaire.\n\n";
+  }
+
+  texte += "Cordialement.";
+
+  document.getElementById("reponse").innerText = texte;
 }
+
 </script>
 
 </body>
