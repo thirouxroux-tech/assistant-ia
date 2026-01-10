@@ -1,110 +1,167 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Assistant IA</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f4f6fb;
-      margin: 0;
-      padding: 0;
+      background: #f4f4f4;
+      padding: 20px;
     }
-    .app {
+
+    .application {
       max-width: 500px;
-      margin: 40px auto;
+      margin: auto;
       background: white;
       padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      border-radius: 8px;
     }
-    h1 {
+
+    h1, h2 {
       text-align: center;
-      color: #4f46e5;
     }
-    input {
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    input, select {
       width: 100%;
       padding: 10px;
-      margin-top: 10px;
-      font-size: 16px;
+      margin-top: 5px;
     }
+
     button {
+      display: block;
       width: 100%;
-      margin-top: 10px;
-      padding: 10px;
-      background: #4f46e5;
-      color: white;
-      border: none;
+      margin-top: 15px;
+      padding: 12px;
       font-size: 16px;
       cursor: pointer;
-      border-radius: 5px;
     }
-    .response {
+
+    #outil {
+      display: none;
+    }
+
+    #reponse {
       margin-top: 15px;
       padding: 10px;
-      background: #eef2ff;
+      background: #eee;
+      white-space: pre-line;
       border-radius: 5px;
-    }
-    ul {
-      margin-top: 15px;
-      padding-left: 20px;
-    }
-    li {
-      font-size: 14px;
-      margin-bottom: 5px;
     }
   </style>
 </head>
 
 <body>
-  <div class="app">
-    <h1>Assistant IA</h1>
 
-    <p>Pose une question :</p>
-    <input id="question" placeholder="Ex : Comment mieux m'organiser ?" />
-    <button onclick="repondre()">Envoyer</button>
+<div class="application">
+  <h1>Assistant IA</h1>
 
-    <div class="response" id="reponse"></div>
+  <!-- ÉCRAN D'ACCUEIL -->
+  <div id="accueil">
+    <p>Que voulez-vous faire ?</p>
 
-    <h3>Historique</h3>
-    <ul id="historique"></ul>
+    <button onclick="ouvrirOutil()">✍️ Écrire un texte</button>
+    <button disabled>📩 Répondre à un email</button>
+    <button disabled>📄 Résumer un texte</button>
+    <button disabled>💡 Trouver des idées</button>
   </div>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const input = document.getElementById("question");
-      const reponse = document.getElementById("reponse");
-      const list = document.getElementById("historique");
+  <!-- OUTIL ÉCRITURE -->
+  <div id="outil">
+    <h2>✍️ Écrire un texte</h2>
 
-      let historique = JSON.parse(localStorage.getItem("historique")) || [];
+    <label>Sujet du texte</label>
+    <input id="sujet" placeholder="Ex : demande de rendez-vous">
 
-      function afficher() {
-        list.innerHTML = "";
-        historique.forEach(q => {
-          const li = document.createElement("li");
-          li.textContent = q;
-          list.appendChild(li);
-        });
-      }
+    <label>À qui s’adresse le texte</label>
+    <input id="destinataire" placeholder="Ex : mon employeur">
 
-      window.repondre = function () {
-        const q = input.value.trim();
-        if (!q) return alert("Écris une question");
+    <label>Ton du texte</label>
+    <select id="ton">
+      <option value="simple">Simple</option>
+      <option value="formel">Formel</option>
+    </select>
 
-        historique.push(q);
-        localStorage.setItem("historique", JSON.stringify(historique));
+    <label>Longueur</label>
+    <select id="longueur">
+      <option value="court">Court</option>
+      <option value="moyen">Moyen</option>
+    </select>
 
-        reponse.innerText = "Tu as demandé : " + q;
-        input.value = "";
-        afficher();
-      };
+    <button onclick="genererTexte()">Générer le texte</button>
+    <button onclick="copierTexte()">📋 Copier le texte</button>
+    <button onclick="retour()">⬅ Retour</button>
 
-      afficher();
-    });
-  </script>
+    <div id="reponse"></div>
+  </div>
+</div>
+
+<script>
+function ouvrirOutil() {
+  document.getElementById("accueil").style.display = "none";
+  document.getElementById("outil").style.display = "block";
+}
+
+function retour() {
+  document.getElementById("outil").style.display = "none";
+  document.getElementById("accueil").style.display = "block";
+  document.getElementById("reponse").innerText = "";
+}
+
+function genererTexte() {
+  const sujet = document.getElementById("sujet").value;
+  const destinataire = document.getElementById("destinataire").value;
+  const ton = document.getElementById("ton").value;
+  const longueur = document.getElementById("longueur").value;
+
+  if (!sujet || !destinataire) {
+    document.getElementById("reponse").innerText =
+      "Merci de remplir le sujet et le destinataire.";
+    return;
+  }
+
+  let texte = "";
+
+  texte += "Bonjour,\n\n";
+  texte +=
+    "Je vous écris concernant " + sujet +
+    ". Ce message s’adresse à " + destinataire + ".\n\n";
+
+  if (longueur === "moyen") {
+    texte +=
+      "Je souhaite vous apporter davantage de précisions à ce sujet et reste à votre disposition pour toute information complémentaire.\n\n";
+  }
+
+  texte += "Cordialement.";
+
+  document.getElementById("reponse").innerText = texte;
+}
+
+function copierTexte() {
+  const texte = document.getElementById("reponse").innerText;
+
+  if (!texte) {
+    alert("Aucun texte à copier");
+    return;
+  }
+
+  navigator.clipboard.writeText(texte).then(() => {
+    alert("Texte copié !");
+  });
+}
+</script>
+
 </body>
 </html>
+
+
 
 
