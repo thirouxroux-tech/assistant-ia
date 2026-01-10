@@ -85,10 +85,39 @@
 <h3>Historique</h3>
 <ul id="historique"></ul>
 
-  </div>
-</div>
-
 <script>
+let historique = JSON.parse(localStorage.getItem("historiqueTextes")) || [];
+
+function sauvegarderHistorique(texte) {
+  historique.unshift(texte);
+  localStorage.setItem("historiqueTextes", JSON.stringify(historique));
+  afficherHistorique();
+}
+
+function afficherHistorique() {
+  const ul = document.getElementById("historique");
+  ul.innerHTML = "";
+
+  historique.forEach((texte) => {
+    const li = document.createElement("li");
+    li.textContent = texte.substring(0, 40) + "...";
+    li.style.cursor = "pointer";
+    li.style.padding = "6px";
+    li.style.borderBottom = "1px solid #ccc";
+
+    li.addEventListener("click", function () {
+      const zone = document.getElementById("reponse");
+      zone.textContent = texte;
+      zone.scrollIntoView({ behavior: "smooth" });
+    });
+
+    ul.appendChild(li);
+  });
+}
+
+window.onload = afficherHistorique;
+</script>
+
 function ouvrirOutil() {
   document.getElementById("accueil").style.display = "none";
   document.getElementById("outil").style.display = "block";
