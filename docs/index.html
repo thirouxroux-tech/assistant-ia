@@ -84,6 +84,7 @@
       <option>Simple</option>
       <option>Professionnel</option>
       <option>Amical</option>
+    
     </select>
 
     <label>Longueur</label>
@@ -106,12 +107,44 @@
     <ul id="historique"></ul>
   </div>
 </div>
+<script>
 function ouvrirResume() {
   document.getElementById("accueil").style.display = "none";
   document.getElementById("outil").style.display = "none";
   document.getElementById("outilEmail").style.display = "none";
   document.getElementById("outilResume").style.display = "block";
 }
+
+function genererResume() {
+  const texte = document.getElementById("texteResume").value;
+  if (texte.trim() === "") {
+    document.getElementById("reponseResume").innerText =
+      "Veuillez coller un texte à résumer.";
+    return;
+  }
+  const phrases = texte.split(".");
+  const resume = phrases.slice(0, 3).join(".") + ".";
+  document.getElementById("reponseResume").innerText = resume;
+}
+
+function copierResume() {
+  const texte = document.getElementById("reponseResume").innerText;
+  if (!texte) {
+    alert("Aucun résumé à copier");
+    return;
+  }
+  navigator.clipboard.writeText(texte);
+  alert("Résumé copié !");
+}
+
+function retourAccueil() {
+  document.getElementById("accueil").style.display = "block";
+  document.getElementById("outil").style.display = "none";
+  document.getElementById("outilEmail").style.display = "none";
+  document.getElementById("outilResume").style.display = "none";
+}
+</script>
+
 
 function genererResume() {
   const texte = document.getElementById("texteResume").value;
