@@ -197,6 +197,17 @@ function copierTexte() {
   navigator.clipboard.writeText(texte);
   alert("Texte copié !");
 }
+function copierEmail() {
+  const texte = document.getElementById("reponseEmail").innerText;
+
+  if (!texte) {
+    alert("Aucune réponse à copier");
+    return;
+  }
+
+  navigator.clipboard.writeText(texte);
+  alert("Réponse copiée !");
+}
 
 </script>
 <div id="outilEmail" style="display:none;">
