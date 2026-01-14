@@ -60,6 +60,8 @@
   <button onclick="ouvrirOutil()">✍️ Écrire un texte</button>
   <br><br>
   <button onclick="ouvrirEmail()">📩 Répondre à un email</button>
+<br><br>
+<button onclick="ouvrirResume()">📝 Résumer un texte</button>
 
   <p style="margin-top:20px;font-size:12px;color:gray;">
     Aucune inscription • Gratuit • Données non stockées
@@ -233,6 +235,21 @@ function copierEmail() {
 <br>
 <button onclick="copierEmail()">📋 Copier la réponse</button>
 
+</div>
+<div id="outilResume" style="display:none;">
+  <h2>📝 Résumer un texte</h2>
+
+  <label>Texte à résumer</label><br>
+  <textarea id="texteResume" rows="8" style="width:100%;"></textarea>
+
+  <br><br>
+  <button onclick="genererResume()">Générer le résumé</button>
+  <button onclick="retour()">← Retour</button>
+
+  <div id="reponseResume" style="margin-top:15px; white-space:pre-line;"></div>
+
+  <br>
+  <button onclick="copierResume()">📋 Copier le résumé</button>
 </div>
 
 </body>
