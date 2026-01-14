@@ -155,6 +155,26 @@ function afficherHistorique() {
 
 afficherHistorique();
 </script>
+<div id="outilEmail" style="display:none;">
+  <h2>📩 Répondre à un email</h2>
+
+  <label>Email reçu</label><br>
+  <textarea id="emailRecu" rows="6" style="width:100%;"></textarea>
+
+  <br><br>
+  <label>Ton de la réponse</label><br>
+  <select id="tonEmail">
+    <option>Poli</option>
+    <option>Professionnel</option>
+    <option>Amical</option>
+  </select>
+
+  <br><br>
+  <button onclick="genererReponseEmail()">Générer la réponse</button>
+  <button onclick="retour()">← Retour</button>
+
+  <div id="reponseEmail" style="margin-top:15px;"></div>
+</div>
 
 </body>
 </html>
