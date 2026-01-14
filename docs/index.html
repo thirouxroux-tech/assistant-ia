@@ -1,325 +1,69 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <title>Assistant IA</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      padding: 40px;
-    }
-    .application {
-      background: white;
-      max-width: 600px;
-      margin: auto;
-      padding: 20px;
-      border-radius: 10px;
-    }
-    button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      cursor: pointer;
-    }
-    input, select {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-    }
-    #reponse {
-      margin-top: 20px;
-      padding: 10px;
-      background: #eef;
-      min-height: 60px;
-      white-space: pre-wrap;
-    }
-    li {
-      cursor: pointer;
-      padding: 6px;
-      border-bottom: 1px solid #ccc;
-    }
-    li:hover {
-      background: #eee;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assistant IA</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  margin: 0;
+  padding: 20px;
+}
+
+.application {
+  max-width: 600px;
+  margin: auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+textarea, input, select {
+  width: 100%;
+  padding: 10px;
+  margin: 6px 0;
+  font-size: 15px;
+}
+
+.section {
+  display: none;
+}
+
+#accueil {
+  display: block;
+}
+
+.resultat {
+  background: #eee;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 6px;
+}
+</style>
 </head>
 
 <body>
 
 <div class="application">
-  <h1>Assistant IA</h1>
 
-<div id="accueil">
-  <h1>🤖 Assistant IA simple</h1>
-  <p>
-    Des outils simples pour écrire, répondre et gagner du temps,
-    même si vous ne connaissez rien à l’IA.
-  </p>
+  <!-- ACCUEIL -->
+  <div id="accueil">
+    <h1>Assistant IA</h1>
+    <p>Des outils simples, sans connaissance en IA</p>
 
-  <button onclick="ouvrirOutil()">✍️ Écrire un texte</button>
-  <br><br>
-  <button onclick="ouvrirEmail()">📩 Répondre à un email</button>
-<br><br>
-<button onclick="ouvrirResume()">📝 Résumer un texte</button>
+    <button onclick="ouvrirTexte()
 
-  <p style="margin-top:20px;font-size:12px;color:gray;">
-    Aucune inscription • Gratuit • Données non stockées
-  </p>
-</div>
-
-
-  <!-- OUTIL -->
-  <div id="outil" style="display:none;">
-    <h2>✍️ Écrire un texte</h2>
-
-    <label>Sujet du texte</label>
-    <input id="sujet" placeholder="Ex : demande de rendez-vous">
-
-    <label>À qui s’adresse le texte</label>
-    <input id="destinataire" placeholder="Ex : mon employeur">
-
-    <label>Ton</label>
-    <select id="ton">
-      <option>Simple</option>
-      <option>Professionnel</option>
-      <option>Amical</option>
-    
-    </select>
-
-    <label>Longueur</label>
-    <select id="longueur">
-      <option>Court</option>
-      <option>Moyen</option>
-      <option>Long</option>
-    </select>
-
-    <button onclick="genererTexte()">Générer le texte</button>
-    <button onclick="retour()">← Retour</button>
-
-    <!-- RÉPONSE -->
-    <div id="reponse"></div>
-<br>
-<button onclick="copierTexte()">📋 Copier le texte</button>
-
-    <!-- HISTORIQUE -->
-    <h3>Historique</h3>
-    <ul id="historique"></ul>
-  </div>
-</div>
-<script>
-function ouvrirResume() {
-  document.getElementById("accueil").style.display = "none";
-  document.getElementById("outil").style.display = "none";
-  document.getElementById("outilEmail").style.display = "none";
-  document.getElementById("outilResume").style.display = "block";
-}
-
-function genererResume() {
-  const texte = document.getElementById("texteResume").value;
-  if (texte.trim() === "") {
-    document.getElementById("reponseResume").innerText =
-      "Veuillez coller un texte à résumer.";
-    return;
-  }
-  const phrases = texte.split(".");
-  const resume = phrases.slice(0, 3).join(".") + ".";
-  document.getElementById("reponseResume").innerText = resume;
-}
-
-function copierResume() {
-  const texte = document.getElementById("reponseResume").innerText;
-  if (!texte) {
-    alert("Aucun résumé à copier");
-    return;
-  }
-  navigator.clipboard.writeText(texte);
-  alert("Résumé copié !");
-}
-
-function retourAccueil() {
-  document.getElementById("accueil").style.display = "block";
-  document.getElementById("outil").style.display = "none";
-  document.getElementById("outilEmail").style.display = "none";
-  document.getElementById("outilResume").style.display = "none";
-}
-</script>
-
-
-function genererResume() {
-  const texte = document.getElementById("texteResume").value;
-
-  if (texte.trim() === "") {
-    document.getElementById("reponseResume").innerText =
-      "Veuillez coller un texte à résumer.";
-    return;
-  }
-
-  const phrases = texte.split(".");
-  const resume = phrases.slice(0, 3).join(".") + ".";
-
-  document.getElementById("reponseResume").innerText = resume;
-}
-
-function copierResume() {
-  const texte = document.getElementById("reponseResume").innerText;
-
-  if (!texte) {
-    alert("Aucun résumé à copier");
-    return;
-  }
-
-  navigator.clipboard.writeText(texte);
-  alert("Résumé copié !");
-}
-
-<script>
-let historique = JSON.parse(localStorage.getItem("historique")) || [];
-
-function ouvrirOutil() {
-  document.getElementById("accueil").style.display = "none";
-  document.getElementById("outil").style.display = "block";
-}
-
-function retour() {
-  document.getElementById("outil").style.display = "none";
-  document.getElementById("accueil").style.display = "block";
-}
-
-function genererTexte() {
-  const sujet = document.getElementById("sujet").value;
-  const dest = document.getElementById("destinataire").value;
-  const ton = document.getElementById("ton").value;
-  const longueur = document.getElementById("longueur").value;
-
-  const texte =
-`Objet : ${sujet}
-
-Bonjour,
-
-Voici un message ${ton.toLowerCase()} destiné à ${dest}.
-Le texte est volontairement ${longueur.toLowerCase()}.
-
-Cordialement.`;
-
-  document.getElementById("reponse").textContent = texte;
-
-  historique.unshift(texte);
-  localStorage.setItem("historique", JSON.stringify(historique));
-  afficherHistorique();
-}
-
-function afficherHistorique() {
-  const ul = document.getElementById("historique");
-  ul.innerHTML = "";
-
-  historique.forEach((texte) => {
-    const li = document.createElement("li");
-    li.textContent = texte.substring(0, 40) + "...";
-    li.onclick = () => {
-      document.getElementById("reponse").textContent = texte;
-    };
-    ul.appendChild(li);
-  });
-}
-
-afficherHistorique();function ouvrirEmail() {
-  document.getElementById("accueil").style.display = "none";
-  document.getElementById("outil").style.display = "none";
-  document.getElementById("outilEmail").style.display = "block";
-}
-
-function genererReponseEmail() {
-  const email = document.getElementById("emailRecu").value;
-  const ton = document.getElementById("tonEmail").value;
-
-  if (email.trim() === "") {
-    document.getElementById("reponseEmail").innerText =
-      "Veuillez coller l'email reçu.";
-    return;
-  }
-
-  let reponse = "Bonjour,\n\n";
-
-  if (ton === "Amical") {
-    reponse += "Merci pour ton message.\n\n";
-  } else {
-    reponse += "Merci pour votre message.\n\n";
-  }
-
-  reponse +=
-    "Je prends bien note de votre email et reviens vers vous rapidement.\n\n";
-
-  reponse += "Cordialement.";
-
-  document.getElementById("reponseEmail").innerText = reponse;
-}
-function copierTexte() {
-  const texte = document.getElementById("reponse").innerText;
-
-  if (!texte) {
-    alert("Aucun texte à copier");
-    return;
-  }
-
-  navigator.clipboard.writeText(texte);
-  alert("Texte copié !");
-}
-function copierEmail() {
-  const texte = document.getElementById("reponseEmail").innerText;
-
-  if (!texte) {
-    alert("Aucune réponse à copier");
-    return;
-  }
-
-  navigator.clipboard.writeText(texte);
-  alert("Réponse copiée !");
-}
-
-</script>
-<div id="outilEmail" style="display:none;">
-  <h2>📩 Répondre à un email</h2>
-
-  <label>Email reçu</label><br>
-  <textarea id="emailRecu" rows="6" style="width:100%;"></textarea>
-
-  <br><br>
-  <label>Ton de la réponse</label><br>
-  <select id="tonEmail">
-    <option>Poli</option>
-    <option>Professionnel</option>
-    <option>Amical</option>
-  </select>
-
-  <br><br>
-  <button onclick="genererReponseEmail()">Générer la réponse</button>
-  <button onclick="retour()">← Retour</button>
-
- <div id="reponseEmail" style="margin-top:15px; white-space:pre-line;"></div>
-
-<br>
-<button onclick="copierEmail()">📋 Copier la réponse</button>
-
-</div>
-<div id="outilResume" style="display:none;">
-  <h2>📝 Résumer un texte</h2>
-
-  <label>Texte à résumer</label><br>
-  <textarea id="texteResume" rows="8" style="width:100%;"></textarea>
-
-  <br><br>
-  <button onclick="genererResume()">Générer le résumé</button>
-  <button onclick="retour()">← Retour</button>
-
-  <div id="reponseResume" style="margin-top:15px; white-space:pre-line;"></div>
-
-  <br>
-  <button onclick="copierResume()">📋 Copier le résumé</button>
-</div>
-
-</body>
-</html>
 
 
 
