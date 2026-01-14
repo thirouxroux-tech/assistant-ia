@@ -96,6 +96,8 @@
 
     <!-- RÉPONSE -->
     <div id="reponse"></div>
+<br>
+<button onclick="copierTexte()">📋 Copier le texte</button>
 
     <!-- HISTORIQUE -->
     <h3>Historique</h3>
@@ -183,6 +185,17 @@ function genererReponseEmail() {
   reponse += "Cordialement.";
 
   document.getElementById("reponseEmail").innerText = reponse;
+}
+function copierTexte() {
+  const texte = document.getElementById("reponse").innerText;
+
+  if (!texte) {
+    alert("Aucun texte à copier");
+    return;
+  }
+
+  navigator.clipboard.writeText(texte);
+  alert("Texte copié !");
 }
 
 </script>
