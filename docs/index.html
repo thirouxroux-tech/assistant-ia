@@ -153,7 +153,38 @@ function afficherHistorique() {
   });
 }
 
-afficherHistorique();
+afficherHistorique();function ouvrirEmail() {
+  document.getElementById("accueil").style.display = "none";
+  document.getElementById("outil").style.display = "none";
+  document.getElementById("outilEmail").style.display = "block";
+}
+
+function genererReponseEmail() {
+  const email = document.getElementById("emailRecu").value;
+  const ton = document.getElementById("tonEmail").value;
+
+  if (email.trim() === "") {
+    document.getElementById("reponseEmail").innerText =
+      "Veuillez coller l'email reçu.";
+    return;
+  }
+
+  let reponse = "Bonjour,\n\n";
+
+  if (ton === "Amical") {
+    reponse += "Merci pour ton message.\n\n";
+  } else {
+    reponse += "Merci pour votre message.\n\n";
+  }
+
+  reponse +=
+    "Je prends bien note de votre email et reviens vers vous rapidement.\n\n";
+
+  reponse += "Cordialement.";
+
+  document.getElementById("reponseEmail").innerText = reponse;
+}
+
 </script>
 <div id="outilEmail" style="display:none;">
   <h2>📩 Répondre à un email</h2>
