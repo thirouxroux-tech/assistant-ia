@@ -2,23 +2,20 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Assistant IA</title>
 
 <style>
 body {
   font-family: Arial, sans-serif;
-  background: #f4f4f4;
-  margin: 0;
-  padding: 20px;
+  background: #f5f5f5;
 }
 
 .application {
   max-width: 600px;
-  margin: auto;
-  background: #fff;
-  padding: 20px;
-  border-radius: 10px;
+  margin: 40px auto;
+  background: white;
+  padding: 25px;
+  border-radius: 8px;
 }
 
 button {
@@ -32,23 +29,18 @@ button {
 textarea, input, select {
   width: 100%;
   padding: 10px;
-  margin: 6px 0;
-  font-size: 15px;
+  margin: 8px 0;
 }
 
 .section {
   display: none;
 }
 
-#accueil {
-  display: block;
-}
-
 .resultat {
-  background: #eee;
+  background: #f0f0f0;
   padding: 10px;
   margin-top: 10px;
-  border-radius: 6px;
+  white-space: pre-wrap;
 }
 </style>
 </head>
@@ -57,10 +49,10 @@ textarea, input, select {
 
 <div class="application">
 
-  <!-- ACCUEIL -->
+<!-- ACCUEIL -->
 <div id="accueil">
   <h1>Assistant IA</h1>
-  <p>Des outils simples, sans connaissance en IA</p>
+  <p>Des outils simples pour tous</p>
 
   <button onclick="ouvrirTexte()">✍️ Écrire un texte</button>
   <button onclick="ouvrirEmail()">📩 Répondre à un email</button>
@@ -68,170 +60,71 @@ textarea, input, select {
   <button onclick="ouvrirSimplifier()">🧠 Simplifier un texte</button>
 </div>
 
-
-
-  </div>
-    <div id="outilSimplifier" class="section">
-  <h2>🧠 Simplifier un texte</h2>
-
-  <textarea id="texteComplexe" placeholder="Collez le texte compliqué ici"></textarea>
-
-  <button onclick="genererSimplification()">Simplifier</button>
+<!-- ECRIRE TEXTE -->
+<div id="outilTexte" class="section">
+  <h2>✍️ Écrire un texte</h2>
+  <input id="sujet" placeholder="Sujet">
+  <input id="destinataire" placeholder="À qui ?">
+  <button onclick="genererTexte()">Générer</button>
+  <div id="reponseTexte" class="resultat"></div>
+  <button onclick="copier('reponseTexte')">Copier</button>
   <button onclick="retourAccueil()">← Retour</button>
+</div>
 
+<!-- EMAIL -->
+<div id="outilEmail" class="section">
+  <h2>📩 Répondre à un email</h2>
+  <textarea id="emailRecu" placeholder="Collez l'email ici"></textarea>
+  <button onclick="genererEmail()">Générer</button>
+  <div id="reponseEmail" class="resultat"></div>
+  <button onclick="copier('reponseEmail')">Copier</button>
+  <button onclick="retourAccueil()">← Retour</button>
+</div>
+
+<!-- RESUME -->
+<div id="outilResume" class="section">
+  <h2>📄 Résumer un texte</h2>
+  <textarea id="texteResume" placeholder="Texte à résumer"></textarea>
+  <button onclick="genererResume()">Résumer</button>
+  <div id="reponseResume" class="resultat"></div>
+  <button onclick="copier('reponseResume')">Copier</button>
+  <button onclick="retourAccueil()">← Retour</button>
+</div>
+
+<!-- SIMPLIFIER -->
+<div id="outilSimplifier" class="section">
+  <h2>🧠 Simplifier un texte</h2>
+  <textarea id="texteComplexe" placeholder="Texte compliqué"></textarea>
+  <button onclick="genererSimplification()">Simplifier</button>
   <div id="reponseSimplifiee" class="resultat"></div>
   <button onclick="copier('reponseSimplifiee')">Copier</button>
+  <button onclick="retourAccueil()">← Retour</button>
 </div>
-  <!-- ECRIRE TEXTE -->
-  <div id="outilTexte" class="section">
-    <h2>✍️ Écrire un texte</h2>
-
-    <input id="sujet" placeholder="Sujet du texte">
-    <input id="destinataire" placeholder="À qui s'adresse le texte">
-
-    <select id="ton">
-      <option>Simple</option>
-      <option>Professionnel</option>
-      <option>Amical</option>
-    </select>
-
-    <button onclick="genererTexte()">Générer le texte</button>
-    <button onclick="retourAccueil()">← Retour</button>
-
-    <div id="reponseTexte" class="resultat"></div>
-    <button onclick="copier('reponseTexte')">Copier</button>
-  </div>
-
-  <!-- EMAIL -->
-  <div id="outilEmail" class="section">
-    <h2>📩 Répondre à un email</h2>
-
-    <textarea id="emailRecu" placeholder="Collez l'email ici"></textarea>
-
-    <select id="tonEmail">
-      <option>Poli</option>
-      <option>Professionnel</option>
-      <option>Amical</option>
-    </select>
-
-    <button onclick="genererEmail()">Générer la réponse</button>
-    <button onclick="retourAccueil()">← Retour</button>
-
-    <div id="reponseEmail" class="resultat"></div>
-    <button onclick="copier('reponseEmail')">Copier</button>
-  </div>
-
-  <!-- RESUME -->
-  <div id="outilResume" class="section">
-    <h2>📄 Résumer un texte</h2>
-
-    <textarea id="texteResume" placeholder="Collez le texte à résumer"></textarea>
-
-    <button onclick="genererResume()">Générer le résumé</button>
-    <button onclick="retourAccueil()">← Retour</button>
-
-    <div id="reponseResume" class="resultat"></div>
-    <button onclick="copier('reponseResume')">Copier</button>
-  </div>
 
 </div>
 
 <script>
-function masquerTout() {
+function cacherTout() {
   document.getElementById("accueil").style.display = "none";
   document.getElementById("outilTexte").style.display = "none";
   document.getElementById("outilEmail").style.display = "none";
   document.getElementById("outilResume").style.display = "none";
+  document.getElementById("outilSimplifier").style.display = "none";
+}
+
+function retourAccueil() {
+  cacherTout();
+  document.getElementById("accueil").style.display = "block";
 }
 
 function ouvrirTexte() {
-  masquerTout();
+  cacherTout();
   document.getElementById("outilTexte").style.display = "block";
 }
 
 function ouvrirEmail() {
-  masquerTout();
-  document.getElementById("outilEmail").style.display = "block";
-}
+  cacherT
 
-function ouvrirResume() {
-  masquerTout();
-  document.getElementById("outilResume").style.display = "block";
-}
-
-function retourAccueil() {
-  masquerTout();
-  document.getElementById("accueil").style.display = "block";
-}
-
-function genererTexte() {
-  const sujet = document.getElementById("sujet").value;
-  const dest = document.getElementById("destinataire").value;
-  const ton = document.getElementById("ton").value;
-
-  document.getElementById("reponseTexte").innerText =
-    `Voici un texte ${ton.toLowerCase()} concernant "${sujet}", destiné à ${dest}.`;
-}
-
-function genererEmail() {
-  const email = document.getElementById("emailRecu").value;
-  const ton = document.getElementById("tonEmail").value;
-
-  document.getElementById("reponseEmail").innerText =
-    `Bonjour,\n\nVoici une réponse ${ton.toLowerCase()} à votre message.\n\nCordialement.`;
-}
-
-function genererResume() {
-  const texte = document.getElementById("texteResume").value;
-  if (!texte.trim()) {
-    document.getElementById("reponseResume").innerText = "Veuillez coller un texte.";
-    return;
-  }
-  const phrases = texte.split(".");
-  document.getElementById("reponseResume").innerText =
-    phrases.slice(0, 3).join(".") + ".";
-}
-
-function copier(id) {
-  const texte = document.getElementById(id).innerText;
-  if (!texte) return;
-  navigator.clipboard.writeText(texte);
-  alert("Texte copié !");
-<script>
-function ouvrirSimplifier() {
-  document.getElementById("accueil").style.display = "none";
-
-  document.getElementById("outilTexte").style.display = "none";
-  document.getElementById("outilEmail").style.display = "none";
-  document.getElementById("outilResume").style.display = "none";
-
-  document.getElementById("outilSimplifier").style.display = "block";
-}
-</script>
-
-
-function genererSimplification() {
-  const texte = document.getElementById("texteComplexe").value;
-  if (!texte.trim()) {
-    document.getElementById("reponseSimplifiee").innerText =
-      "Veuillez coller un texte à simplifier.";
-    return;
-  }
-
-  document.getElementById("reponseSimplifiee").innerText =
-    "Version simplifiée :\n\n" +
-    texte
-      .replace(/afin de|dans le cadre de|par conséquent|en vertu de/gi, "")
-      .split(".")
-      .slice(0, 3)
-      .join(".") +
-    ".";
-}
-
-</script>
-
-</body>
-</html>
 
 
 
