@@ -59,12 +59,25 @@ textarea, input, select {
 
   <!-- ACCUEIL -->
   <div id="accueil">
-    <h1>Assistant IA</h1>
+  <button onclick="ouvrirSimplifier()">🧠 Simplifier un texte</button>
+  <h1>Assistant IA</h1>
     <p>Des outils simples, sans connaissance en IA</p>
 
     <button onclick="ouvrirTexte()">✍️ Écrire un texte</button>
     <button onclick="ouvrirEmail()">📩 Répondre à un email</button>
     <button onclick="ouvrirResume()">📄 Résumer un texte</button>
+    <div id="outilSimplifier" class="section">
+  <h2>🧠 Simplifier un texte</h2>
+
+  <textarea id="texteComplexe" placeholder="Collez le texte compliqué ici"></textarea>
+
+  <button onclick="genererSimplification()">Simplifier</button>
+  <button onclick="retourAccueil()">← Retour</button>
+
+  <div id="reponseSimplifiee" class="resultat"></div>
+  <button onclick="copier('reponseSimplifiee')">Copier</button>
+</div>
+
   </div>
 
   <!-- ECRIRE TEXTE -->
@@ -182,7 +195,29 @@ function copier(id) {
   if (!texte) return;
   navigator.clipboard.writeText(texte);
   alert("Texte copié !");
+}function ouvrirSimplifier() {
+  masquerTout();
+  document.getElementById("outilSimplifier").style.display = "block";
 }
+
+function genererSimplification() {
+  const texte = document.getElementById("texteComplexe").value;
+  if (!texte.trim()) {
+    document.getElementById("reponseSimplifiee").innerText =
+      "Veuillez coller un texte à simplifier.";
+    return;
+  }
+
+  document.getElementById("reponseSimplifiee").innerText =
+    "Version simplifiée :\n\n" +
+    texte
+      .replace(/afin de|dans le cadre de|par conséquent|en vertu de/gi, "")
+      .split(".")
+      .slice(0, 3)
+      .join(".") +
+    ".";
+}
+
 </script>
 
 </body>
