@@ -123,7 +123,55 @@ function ouvrirTexte() {
 }
 
 function ouvrirEmail() {
-  cacherT
+  cacherTout();
+  document.getElementById("outilEmail").style.display = "block";
+}
+
+function ouvrirResume() {
+  cacherTout();
+  document.getElementById("outilResume").style.display = "block";
+}
+
+function ouvrirSimplifier() {
+  cacherTout();
+  document.getElementById("outilSimplifier").style.display = "block";
+}
+
+function genererTexte() {
+  const sujet = document.getElementById("sujet").value;
+  const dest = document.getElementById("destinataire").value;
+  document.getElementById("reponseTexte").innerText =
+    "Bonjour,\n\nVoici un texte concernant : " + sujet +
+    "\nDestinataire : " + dest + ".\n\nCordialement.";
+}
+
+function genererEmail() {
+  document.getElementById("reponseEmail").innerText =
+    "Bonjour,\n\nMerci pour votre message.\n\nCordialement.";
+}
+
+function genererResume() {
+  const texte = document.getElementById("texteResume").value;
+  document.getElementById("reponseResume").innerText =
+    texte.split(".").slice(0, 2).join(".") + ".";
+}
+
+function genererSimplification() {
+  const texte = document.getElementById("texteComplexe").value;
+  document.getElementById("reponseSimplifiee").innerText =
+    "Version simple :\n" + texte;
+}
+
+function copier(id) {
+  const texte = document.getElementById(id).innerText;
+  navigator.clipboard.writeText(texte);
+  alert("Texte copié");
+}
+</script>
+
+</body>
+</html>
+
 
 
 
