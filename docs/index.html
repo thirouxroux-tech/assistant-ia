@@ -58,14 +58,19 @@ textarea, input, select {
 <div class="application">
 
   <!-- ACCUEIL -->
-  <div id="accueil">
-  <button onclick="ouvrirSimplifier()">🧠 Simplifier un texte</button>
+<div id="accueil">
   <h1>Assistant IA</h1>
-    <p>Des outils simples, sans connaissance en IA</p>
+  <p>Des outils simples, sans connaissance en IA</p>
 
-    <button onclick="ouvrirTexte()">✍️ Écrire un texte</button>
-    <button onclick="ouvrirEmail()">📩 Répondre à un email</button>
-    <button onclick="ouvrirResume()">📄 Résumer un texte</button>
+  <button onclick="ouvrirTexte()">✍️ Écrire un texte</button>
+  <button onclick="ouvrirEmail()">📩 Répondre à un email</button>
+  <button onclick="ouvrirResume()">📄 Résumer un texte</button>
+  <button onclick="ouvrirSimplifier()">🧠 Simplifier un texte</button>
+</div>
+
+
+
+  </div>
     <div id="outilSimplifier" class="section">
   <h2>🧠 Simplifier un texte</h2>
 
@@ -77,9 +82,6 @@ textarea, input, select {
   <div id="reponseSimplifiee" class="resultat"></div>
   <button onclick="copier('reponseSimplifiee')">Copier</button>
 </div>
-
-  </div>
-
   <!-- ECRIRE TEXTE -->
   <div id="outilTexte" class="section">
     <h2>✍️ Écrire un texte</h2>
