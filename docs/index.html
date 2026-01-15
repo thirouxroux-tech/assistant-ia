@@ -197,10 +197,18 @@ function copier(id) {
   if (!texte) return;
   navigator.clipboard.writeText(texte);
   alert("Texte copié !");
-}function ouvrirSimplifier() {
-  masquerTout();
+<script>
+function ouvrirSimplifier() {
+  document.getElementById("accueil").style.display = "none";
+
+  document.getElementById("outilTexte").style.display = "none";
+  document.getElementById("outilEmail").style.display = "none";
+  document.getElementById("outilResume").style.display = "none";
+
   document.getElementById("outilSimplifier").style.display = "block";
 }
+</script>
+
 
 function genererSimplification() {
   const texte = document.getElementById("texteComplexe").value;
