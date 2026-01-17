@@ -11,28 +11,27 @@ body {
 }
 
 .app {
-  max-width: 600px;
+  max-width: 650px;
   margin: 40px auto;
   background: white;
   padding: 25px;
   border-radius: 10px;
 }
 
-h1 {
+h1, h2 {
   text-align: center;
 }
 
 button {
   width: 100%;
   padding: 14px;
-  margin-top: 12px;
+  margin-top: 10px;
   font-size: 16px;
   cursor: pointer;
 }
 
-textarea {
+textarea, input {
   width: 100%;
-  height: 140px;
   padding: 10px;
   margin-top: 10px;
 }
@@ -41,18 +40,18 @@ textarea {
   display: none;
 }
 
+.info {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
 .resultat {
   background: #eef2f5;
   padding: 12px;
   margin-top: 15px;
   border-radius: 6px;
   white-space: pre-wrap;
-}
-
-.info {
-  font-size: 14px;
-  color: #555;
-  margin-bottom: 10px;
 }
 
 .success {
@@ -69,85 +68,47 @@ textarea {
 
 <!-- ACCUEIL -->
 <div id="accueil">
-  <h1>Comprendre plus facilement</h1>
+  <h1>Assistant Simple</h1>
   <p class="info">
-    Collez un texte compliqué (courrier, email, consigne…).  
-    L’assistant va vous l’expliquer simplement.
+    Comprendre, écrire et répondre plus facilement.  
+    Sans jargon, sans inscription.
   </p>
 
-  <button onclick="ouvrirSimplifier()">🧠 Simplifier un texte</button>
+  <button onclick="ouvrir('simplifier')">🧠 Simplifier un texte</button>
+  <button onclick="ouvrir('resume')">📄 Résumer un texte</button>
+  <button onclick="ouvrir('texte')">✍️ Écrire un texte</button>
+  <button onclick="ouvrir('email')">📩 Répondre à un email</button>
 </div>
 
-<!-- OUTIL SIMPLIFIER -->
-<div id="outilSimplifier" class="section">
+<!-- SIMPLIFIER -->
+<div id="simplifier" class="section">
   <h2>🧠 Simplifier un texte</h2>
-
-  <p class="info">
-    Collez ci-dessous un texte difficile à comprendre.  
-    Vous obtiendrez une version plus simple et plus claire.
-  </p>
-
-  <textarea id="texteComplexe" placeholder="Collez votre texte ici..."></textarea>
-
-  <button onclick="simplifierTexte()">Simplifier</button>
-
-  <div id="etat" class="info"></div>
-
-  <div id="reponse" class="resultat"></div>
-
-  <button onclick="copierTexte()">📋 Copier le texte simplifié</button>
-  <div id="copieOK" class="success"></div>
-
-  <button onclick="retourAccueil()">← Retour à l’accueil</button>
+  <p class="info">Collez un texte compliqué, il sera expliqué simplement.</p>
+  <textarea id="simpInput"></textarea>
+  <button onclick="simplifier()">Simplifier</button>
+  <div id="simpResult" class="resultat"></div>
+  <button onclick="copier('simpResult')">📋 Copier</button>
+  <div id="simpOK" class="success"></div>
+  <button onclick="retour()">← Retour</button>
 </div>
 
+<!-- RESUME -->
+<div id="resume" class="section">
+  <h2>📄 Résumer un texte</h2>
+  <p class="info">Collez un texte long pour obtenir l’essentiel.</p>
+  <textarea id="resInput"></textarea>
+  <button onclick="resumer()">Résumer</button>
+  <div id="resResult" class="resultat"></div>
+  <button onclick="copier('resResult')">📋 Copier</button>
+  <button onclick="retour()">← Retour</button>
 </div>
 
-<script>
-function ouvrirSimplifier() {
-  document.getElementById("accueil").style.display = "none";
-  document.getElementById("outilSimplifier").style.display = "block";
-}
+<!-- TEXTE -->
+<div id="texte" class="section">
+  <h2>✍️ Écrire un texte</h2>
+  <input id="sujet" placeholder="Sujet">
+  <input id="dest" p
 
-function retourAccueil() {
-  document.getElementById("outilSimplifier").style.display = "none";
-  document.getElementById("accueil").style.display = "block";
-}
-
-function simplifierTexte() {
-  const texte = document.getElementById("texteComplexe").value;
-
-  if (texte.trim() === "") {
-    alert("Veuillez coller un texte.");
-    return;
-  }
-
-  document.getElementById("etat").innerText = "Analyse en cours...";
-  document.getElementById("reponse").innerText = "";
-  document.getElementById("copieOK").innerText = "";
-
-  setTimeout(() => {
-    document.getElementById("etat").innerText = "";
-    document.getElementById("reponse").innerText =
-      "Version simplifiée :\n\n" + texte;
-  }, 800);
-}
-
-function copierTexte() {
-  const texte = document.getElementById("reponse").innerText;
-
-  if (texte.trim() === "") {
-    alert("Aucun texte à copier.");
-    return;
-  }
-
-  navigator.clipboard.writeText(texte);
-  document.getElementById("copieOK").innerText = "✅ Texte copié";
-}
-</script>
-
-</body>
-</html>
 
 
 
