@@ -3,21 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <title>Assistant Simple</title>
-
 <link rel="manifest" href="manifest.json">
 
 <style>
 body {
   font-family: Arial, sans-serif;
-  background: #f4f6f8;
+  background: #eef1f4;
 }
 
 .app {
   max-width: 720px;
-  margin: 40px auto;
+  margin: 30px auto;
   background: white;
   padding: 25px;
-  border-radius: 10px;
+  border-radius: 12px;
 }
 
 h1, h2 {
@@ -26,15 +25,16 @@ h1, h2 {
 
 .menu button {
   width: 100%;
-  padding: 14px;
+  padding: 15px;
   margin: 8px 0;
   font-size: 16px;
+  border-radius: 8px;
   cursor: pointer;
 }
 
 textarea, input {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   margin-top: 10px;
 }
 
@@ -43,10 +43,11 @@ textarea, input {
 }
 
 .resultat {
-  background: #eef2f5;
+  background: #f0f3f6;
   padding: 12px;
   margin-top: 15px;
   white-space: pre-wrap;
+  border-radius: 6px;
 }
 
 button {
@@ -54,16 +55,24 @@ button {
 }
 
 .histo-item {
-  background: #eef2f5;
+  background: #f0f3f6;
   padding: 10px;
   margin-top: 8px;
   cursor: pointer;
+  border-radius: 6px;
 }
 
 .info {
   font-size: 14px;
   color: #555;
   text-align: center;
+}
+
+.counter {
+  text-align: center;
+  font-size: 14px;
+  margin-bottom: 15px;
+  color: #333;
 }
 </style>
 </head>
@@ -72,10 +81,10 @@ button {
 
 <div class="app">
 
-<!-- MENU -->
 <div id="menu" class="menu">
   <h1>Assistant Simple</h1>
-  <p class="info">Des outils simples pour écrire et comprendre</p>
+  <p class="info">Des outils simples pour écrire, comprendre et répondre</p>
+  <p id="compteur" class="counter"></p>
 
   <button onclick="ouvrir('simplifier')">🧠 Simplifier un texte</button>
   <button onclick="ouvrir('resume')">📄 Résumer un texte</button>
@@ -85,149 +94,151 @@ button {
   <button onclick="ouvrir('historique')">📜 Historique</button>
 </div>
 
-<!-- HISTORIQUE -->
 <div id="historique" class="section">
   <h2>📜 Historique</h2>
   <div id="listeHistorique"></div>
-  <button onclick="effacerHistorique()">🗑 Effacer l’historique</button>
-  <button onclick="retour()">← Retour menu</button>
+  <button onclick="effacerHistorique()">🗑 Effacer</button>
+  <button onclick="retour()">← Menu</button>
 </div>
 
-<!-- SIMPLIFIER -->
 <div id="simplifier" class="section">
   <h2>🧠 Simplifier un texte</h2>
   <textarea id="simpInput"></textarea>
-  <button onclick="simplifier()">Simplifier</button>
+  <button onclick="action(() => simpInput.value)">Simplifier</button>
   <div id="simpResult" class="resultat"></div>
   <button onclick="copier('simpResult')">📋 Copier</button>
-  <button onclick="retour()">← Retour menu</button>
+  <button onclick="retour()">← Menu</button>
 </div>
 
-<!-- RESUME -->
 <div id="resume" class="section">
   <h2>📄 Résumer un texte</h2>
   <textarea id="resInput"></textarea>
-  <button onclick="resumer()">Résumer</button>
+  <button onclick="action(() => resInput.value.split('.').slice(0,2).join('.') + '.')">Résumer</button>
   <div id="resResult" class="resultat"></div>
   <button onclick="copier('resResult')">📋 Copier</button>
-  <button onclick="retour()">← Retour menu</button>
+  <button onclick="retour()">← Menu</button>
 </div>
 
-<!-- EXPLIQUER -->
 <div id="expliquer" class="section">
   <h2>👶 Expliquer simplement</h2>
   <textarea id="expInput"></textarea>
-  <button onclick="expliquer()">Expliquer</button>
+  <button onclick="action(() => expInput.value)">Expliquer</button>
   <div id="expResult" class="resultat"></div>
   <button onclick="copier('expResult')">📋 Copier</button>
-  <button onclick="retour()">← Retour menu</button>
+  <button onclick="retour()">← Menu</button>
 </div>
 
-<!-- TEXTE -->
 <div id="texte" class="section">
   <h2>✍️ Écrire un texte</h2>
   <input id="sujet" placeholder="Sujet">
-  <button onclick="ecrire()">Générer</button>
+  <button onclick="action(() => 'Texte clair sur : ' + sujet.value)">Générer</button>
   <div id="textResult" class="resultat"></div>
   <button onclick="copier('textResult')">📋 Copier</button>
-  <button onclick="retour()">← Retour menu</button>
+  <button onclick="retour()">← Menu</button>
 </div>
 
-<!-- EMAIL -->
 <div id="email" class="section">
   <h2>📩 Répondre à un email</h2>
   <textarea id="mailInput"></textarea>
-  <button onclick="repondre()">Générer</button>
+  <button onclick="action(() => 'Merci pour votre message.')">Répondre</button>
   <div id="mailResult" class="resultat"></div>
   <button onclick="copier('mailResult')">📋 Copier</button>
-  <button onclick="retour()">← Retour menu</button>
+  <button onclick="retour()">← Menu</button>
 </div>
 
 </div>
 
 <script>
-function cacherTout() {
-  document.querySelectorAll('.section').forEach(s => s.style.display = "none");
-  document.getElementById("menu").style.display = "none";
+const MAX = 5;
+
+function getData() {
+  return JSON.parse(localStorage.getItem("usage")) || {date:"",count:0};
 }
 
-function ouvrir(id) {
+function saveData(d){ localStorage.setItem("usage",JSON.stringify(d)); }
+
+function canUse(){
+  const today = new Date().toDateString();
+  let d = getData();
+  if(d.date !== today){ d = {date:today,count:0}; saveData(d); }
+  return d.count < MAX;
+}
+
+function useOnce(){
+  let d = getData();
+  d.count++;
+  saveData(d);
+  updateCounter();
+}
+
+function updateCounter(){
+  const d = getData();
+  document.getElementById("compteur").innerText =
+    "Utilisations restantes aujourd’hui : " + (MAX - d.count);
+}
+
+updateCounter();
+
+function cacherTout(){
+  document.querySelectorAll('.section').forEach(s=>s.style.display="none");
+  menu.style.display="none";
+}
+
+function ouvrir(id){
   cacherTout();
-  document.getElementById(id).style.display = "block";
-  if (id === "historique") afficherHistorique();
+  document.getElementById(id).style.display="block";
+  if(id==="historique") afficherHistorique();
 }
 
-function retour() {
+function retour(){
   cacherTout();
-  document.getElementById("menu").style.display = "block";
+  menu.style.display="block";
 }
 
-function sauvegarderHistorique(texte) {
-  let histo = JSON.parse(localStorage.getItem("historique")) || [];
-  histo.unshift(texte);
-  localStorage.setItem("historique", JSON.stringify(histo.slice(0,20)));
+function action(fn){
+  if(!canUse()){ alert("Limite atteinte. Revenez demain."); return; }
+  const r = fn();
+  document.querySelector(".section[style*='block'] .resultat").innerText = r;
+  sauvegarder(r);
+  useOnce();
 }
 
-function afficherHistorique() {
-  const zone = document.getElementById("listeHistorique");
-  zone.innerHTML = "";
-  let histo = JSON.parse(localStorage.getItem("historique")) || [];
-  histo.forEach(t => {
-    let div = document.createElement("div");
-    div.className = "histo-item";
-    div.innerText = t.substring(0,100) + "...";
-    div.onclick = () => alert(t);
-    zone.appendChild(div);
+function sauvegarder(t){
+  let h = JSON.parse(localStorage.getItem("historique")) || [];
+  h.unshift(t);
+  localStorage.setItem("historique",JSON.stringify(h.slice(0,20)));
+}
+
+function afficherHistorique(){
+  const z = listeHistorique;
+  z.innerHTML="";
+  (JSON.parse(localStorage.getItem("historique"))||[]).forEach(t=>{
+    const d=document.createElement("div");
+    d.className="histo-item";
+    d.innerText=t.substring(0,80)+"...";
+    d.onclick=()=>alert(t);
+    z.appendChild(d);
   });
 }
 
-function effacerHistorique() {
+function effacerHistorique(){
   localStorage.removeItem("historique");
   afficherHistorique();
 }
 
-function simplifier() {
-  const r = "Version simplifiée :\n\n" + simpInput.value;
-  simpResult.innerText = r;
-  sauvegarderHistorique(r);
-}
-
-function resumer() {
-  const r = "Résumé :\n\n" + resInput.value.split(".").slice(0,2).join(".") + ".";
-  resResult.innerText = r;
-  sauvegarderHistorique(r);
-}
-
-function expliquer() {
-  const r = "Explication simple :\n\n" + expInput.value;
-  expResult.innerText = r;
-  sauvegarderHistorique(r);
-}
-
-function ecrire() {
-  const r = "Voici un texte clair et simple.";
-  textResult.innerText = r;
-  sauvegarderHistorique(r);
-}
-
-function repondre() {
-  const r = "Merci pour votre message.";
-  mailResult.innerText = r;
-  sauvegarderHistorique(r);
-}
-
-function copier(id) {
+function copier(id){
   navigator.clipboard.writeText(document.getElementById(id).innerText);
   alert("Texte copié");
 }
 
-if ("serviceWorker" in navigator) {
+if("serviceWorker"in navigator){
   navigator.serviceWorker.register("service-worker.js");
 }
 </script>
 
 </body>
 </html>
+
 
 
 
