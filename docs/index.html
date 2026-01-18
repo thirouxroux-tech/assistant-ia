@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <title>Assistant Simple</title>
 
+<link rel="manifest" href="manifest.json">
+
 <style>
 body {
   font-family: Arial, sans-serif;
@@ -11,7 +13,7 @@ body {
 }
 
 .app {
-  max-width: 700px;
+  max-width: 720px;
   margin: 40px auto;
   background: white;
   padding: 25px;
@@ -47,9 +49,14 @@ textarea, input {
   white-space: pre-wrap;
 }
 
+button {
+  margin-top: 10px;
+}
+
 .info {
   font-size: 14px;
   color: #555;
+  text-align: center;
 }
 </style>
 </head>
@@ -61,10 +68,11 @@ textarea, input {
 <!-- MENU -->
 <div id="menu" class="menu">
   <h1>Assistant Simple</h1>
-  <p class="info">Choisissez un outil simple et utile</p>
+  <p class="info">Des outils simples pour mieux écrire et comprendre</p>
 
   <button onclick="ouvrir('simplifier')">🧠 Simplifier un texte</button>
   <button onclick="ouvrir('resume')">📄 Résumer un texte</button>
+  <button onclick="ouvrir('expliquer')">👶 Expliquer simplement</button>
   <button onclick="ouvrir('texte')">✍️ Écrire un texte</button>
   <button onclick="ouvrir('email')">📩 Répondre à un email</button>
 </div>
@@ -89,11 +97,21 @@ textarea, input {
   <button onclick="retour()">← Retour menu</button>
 </div>
 
-<!-- TEXTE -->
+<!-- EXPLIQUER SIMPLEMENT -->
+<div id="expliquer" class="section">
+  <h2>👶 Expliquer simplement</h2>
+  <textarea id="expInput" placeholder="Collez un texte difficile à comprendre..."></textarea>
+  <button onclick="expliquer()">Expliquer simplement</button>
+  <div id="expResult" class="resultat"></div>
+  <button onclick="copier('expResult')">📋 Copier</button>
+  <button onclick="retour()">← Retour menu</button>
+</div>
+
+<!-- ECRIRE TEXTE -->
 <div id="texte" class="section">
   <h2>✍️ Écrire un texte</h2>
-  <input id="sujet" placeholder="Sujet">
-  <input id="dest" placeholder="Destinataire">
+  <input id="sujet" placeholder="Sujet du texte">
+  <input id="dest" placeholder="Pour qui ?">
   <button onclick="ecrire()">Générer</button>
   <div id="textResult" class="resultat"></div>
   <button onclick="copier('textResult')">📋 Copier</button>
@@ -137,17 +155,24 @@ function simplifier() {
 function resumer() {
   const t = document.getElementById("resInput").value;
   document.getElementById("resResult").innerText =
-    t.split(".").slice(0,2).join(".") + ".";
+    "Résumé :\n\n" + t.split(".").slice(0,2).join(".") + ".";
+}
+
+function expliquer() {
+  document.getElementById("expResult").innerText =
+    "Explication simple :\n\n" +
+    document.getElementById("expInput").value +
+    "\n\n👉 En résumé : c’est plus simple que ça en a l’air.";
 }
 
 function ecrire() {
   document.getElementById("textResult").innerText =
-    "Bonjour,\n\nVoici un texte concernant votre sujet.\n\nCordialement.";
+    "Bonjour,\n\nVoici un texte clair et simple concernant votre sujet.\n\nCordialement.";
 }
 
 function repondre() {
   document.getElementById("mailResult").innerText =
-    "Bonjour,\n\nMerci pour votre message.\n\nCordialement.";
+    "Bonjour,\n\nMerci pour votre message. Voici une réponse simple et polie.\n\nCordialement.";
 }
 
 function copier(id) {
@@ -155,6 +180,10 @@ function copier(id) {
   if (!t) return;
   navigator.clipboard.writeText(t);
   alert("Texte copié");
+}
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js");
 }
 </script>
 
