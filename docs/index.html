@@ -18,22 +18,26 @@ body {
   border-radius: 10px;
 }
 
+h1, h2 {
+  text-align: center;
+}
+
 .menu button {
   width: 100%;
   padding: 14px;
-  margin: 6px 0;
+  margin: 8px 0;
   font-size: 16px;
   cursor: pointer;
-}
-
-.section {
-  display: none;
 }
 
 textarea, input {
   width: 100%;
   padding: 10px;
   margin-top: 10px;
+}
+
+.section {
+  display: none;
 }
 
 .resultat {
@@ -44,8 +48,8 @@ textarea, input {
 }
 
 .info {
-  color: #555;
   font-size: 14px;
+  color: #555;
 }
 </style>
 </head>
@@ -57,7 +61,7 @@ textarea, input {
 <!-- MENU -->
 <div id="menu" class="menu">
   <h1>Assistant Simple</h1>
-  <p class="info">Choisissez un outil</p>
+  <p class="info">Choisissez un outil simple et utile</p>
 
   <button onclick="ouvrir('simplifier')">🧠 Simplifier un texte</button>
   <button onclick="ouvrir('resume')">📄 Résumer un texte</button>
@@ -68,18 +72,20 @@ textarea, input {
 <!-- SIMPLIFIER -->
 <div id="simplifier" class="section">
   <h2>🧠 Simplifier un texte</h2>
-  <textarea id="simpInput"></textarea>
+  <textarea id="simpInput" placeholder="Collez un texte compliqué..."></textarea>
   <button onclick="simplifier()">Simplifier</button>
   <div id="simpResult" class="resultat"></div>
+  <button onclick="copier('simpResult')">📋 Copier</button>
   <button onclick="retour()">← Retour menu</button>
 </div>
 
 <!-- RESUME -->
 <div id="resume" class="section">
   <h2>📄 Résumer un texte</h2>
-  <textarea id="resInput"></textarea>
+  <textarea id="resInput" placeholder="Collez un texte long..."></textarea>
   <button onclick="resumer()">Résumer</button>
   <div id="resResult" class="resultat"></div>
+  <button onclick="copier('resResult')">📋 Copier</button>
   <button onclick="retour()">← Retour menu</button>
 </div>
 
@@ -90,15 +96,17 @@ textarea, input {
   <input id="dest" placeholder="Destinataire">
   <button onclick="ecrire()">Générer</button>
   <div id="textResult" class="resultat"></div>
+  <button onclick="copier('textResult')">📋 Copier</button>
   <button onclick="retour()">← Retour menu</button>
 </div>
 
 <!-- EMAIL -->
 <div id="email" class="section">
   <h2>📩 Répondre à un email</h2>
-  <textarea id="mailInput"></textarea>
-  <button onclick="repondre()">Générer réponse</button>
+  <textarea id="mailInput" placeholder="Collez l’email reçu..."></textarea>
+  <button onclick="repondre()">Générer une réponse</button>
   <div id="mailResult" class="resultat"></div>
+  <button onclick="copier('mailResult')">📋 Copier</button>
   <button onclick="retour()">← Retour menu</button>
 </div>
 
@@ -134,17 +142,25 @@ function resumer() {
 
 function ecrire() {
   document.getElementById("textResult").innerText =
-    "Bonjour,\n\nVoici votre texte.\n\nCordialement.";
+    "Bonjour,\n\nVoici un texte concernant votre sujet.\n\nCordialement.";
 }
 
 function repondre() {
   document.getElementById("mailResult").innerText =
     "Bonjour,\n\nMerci pour votre message.\n\nCordialement.";
 }
+
+function copier(id) {
+  const t = document.getElementById(id).innerText;
+  if (!t) return;
+  navigator.clipboard.writeText(t);
+  alert("Texte copié");
+}
 </script>
 
 </body>
 </html>
+
 
 
 
