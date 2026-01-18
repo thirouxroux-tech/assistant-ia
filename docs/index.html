@@ -53,6 +53,13 @@ button {
   margin-top: 10px;
 }
 
+.histo-item {
+  background: #eef2f5;
+  padding: 10px;
+  margin-top: 8px;
+  cursor: pointer;
+}
+
 .info {
   font-size: 14px;
   color: #555;
@@ -68,19 +75,28 @@ button {
 <!-- MENU -->
 <div id="menu" class="menu">
   <h1>Assistant Simple</h1>
-  <p class="info">Des outils simples pour mieux écrire et comprendre</p>
+  <p class="info">Des outils simples pour écrire et comprendre</p>
 
   <button onclick="ouvrir('simplifier')">🧠 Simplifier un texte</button>
   <button onclick="ouvrir('resume')">📄 Résumer un texte</button>
   <button onclick="ouvrir('expliquer')">👶 Expliquer simplement</button>
   <button onclick="ouvrir('texte')">✍️ Écrire un texte</button>
   <button onclick="ouvrir('email')">📩 Répondre à un email</button>
+  <button onclick="ouvrir('historique')">📜 Historique</button>
+</div>
+
+<!-- HISTORIQUE -->
+<div id="historique" class="section">
+  <h2>📜 Historique</h2>
+  <div id="listeHistorique"></div>
+  <button onclick="effacerHistorique()">🗑 Effacer l’historique</button>
+  <button onclick="retour()">← Retour menu</button>
 </div>
 
 <!-- SIMPLIFIER -->
 <div id="simplifier" class="section">
   <h2>🧠 Simplifier un texte</h2>
-  <textarea id="simpInput" placeholder="Collez un texte compliqué..."></textarea>
+  <textarea id="simpInput"></textarea>
   <button onclick="simplifier()">Simplifier</button>
   <div id="simpResult" class="resultat"></div>
   <button onclick="copier('simpResult')">📋 Copier</button>
@@ -90,28 +106,27 @@ button {
 <!-- RESUME -->
 <div id="resume" class="section">
   <h2>📄 Résumer un texte</h2>
-  <textarea id="resInput" placeholder="Collez un texte long..."></textarea>
+  <textarea id="resInput"></textarea>
   <button onclick="resumer()">Résumer</button>
   <div id="resResult" class="resultat"></div>
   <button onclick="copier('resResult')">📋 Copier</button>
   <button onclick="retour()">← Retour menu</button>
 </div>
 
-<!-- EXPLIQUER SIMPLEMENT -->
+<!-- EXPLIQUER -->
 <div id="expliquer" class="section">
   <h2>👶 Expliquer simplement</h2>
-  <textarea id="expInput" placeholder="Collez un texte difficile à comprendre..."></textarea>
-  <button onclick="expliquer()">Expliquer simplement</button>
+  <textarea id="expInput"></textarea>
+  <button onclick="expliquer()">Expliquer</button>
   <div id="expResult" class="resultat"></div>
   <button onclick="copier('expResult')">📋 Copier</button>
   <button onclick="retour()">← Retour menu</button>
 </div>
 
-<!-- ECRIRE TEXTE -->
+<!-- TEXTE -->
 <div id="texte" class="section">
   <h2>✍️ Écrire un texte</h2>
-  <input id="sujet" placeholder="Sujet du texte">
-  <input id="dest" placeholder="Pour qui ?">
+  <input id="sujet" placeholder="Sujet">
   <button onclick="ecrire()">Générer</button>
   <div id="textResult" class="resultat"></div>
   <button onclick="copier('textResult')">📋 Copier</button>
@@ -121,8 +136,8 @@ button {
 <!-- EMAIL -->
 <div id="email" class="section">
   <h2>📩 Répondre à un email</h2>
-  <textarea id="mailInput" placeholder="Collez l’email reçu..."></textarea>
-  <button onclick="repondre()">Générer une réponse</button>
+  <textarea id="mailInput"></textarea>
+  <button onclick="repondre()">Générer</button>
   <div id="mailResult" class="resultat"></div>
   <button onclick="copier('mailResult')">📋 Copier</button>
   <button onclick="retour()">← Retour menu</button>
@@ -139,6 +154,7 @@ function cacherTout() {
 function ouvrir(id) {
   cacherTout();
   document.getElementById(id).style.display = "block";
+  if (id === "historique") afficherHistorique();
 }
 
 function retour() {
@@ -146,39 +162,62 @@ function retour() {
   document.getElementById("menu").style.display = "block";
 }
 
+function sauvegarderHistorique(texte) {
+  let histo = JSON.parse(localStorage.getItem("historique")) || [];
+  histo.unshift(texte);
+  localStorage.setItem("historique", JSON.stringify(histo.slice(0,20)));
+}
+
+function afficherHistorique() {
+  const zone = document.getElementById("listeHistorique");
+  zone.innerHTML = "";
+  let histo = JSON.parse(localStorage.getItem("historique")) || [];
+  histo.forEach(t => {
+    let div = document.createElement("div");
+    div.className = "histo-item";
+    div.innerText = t.substring(0,100) + "...";
+    div.onclick = () => alert(t);
+    zone.appendChild(div);
+  });
+}
+
+function effacerHistorique() {
+  localStorage.removeItem("historique");
+  afficherHistorique();
+}
+
 function simplifier() {
-  document.getElementById("simpResult").innerText =
-    "Version simplifiée :\n\n" +
-    document.getElementById("simpInput").value;
+  const r = "Version simplifiée :\n\n" + simpInput.value;
+  simpResult.innerText = r;
+  sauvegarderHistorique(r);
 }
 
 function resumer() {
-  const t = document.getElementById("resInput").value;
-  document.getElementById("resResult").innerText =
-    "Résumé :\n\n" + t.split(".").slice(0,2).join(".") + ".";
+  const r = "Résumé :\n\n" + resInput.value.split(".").slice(0,2).join(".") + ".";
+  resResult.innerText = r;
+  sauvegarderHistorique(r);
 }
 
 function expliquer() {
-  document.getElementById("expResult").innerText =
-    "Explication simple :\n\n" +
-    document.getElementById("expInput").value +
-    "\n\n👉 En résumé : c’est plus simple que ça en a l’air.";
+  const r = "Explication simple :\n\n" + expInput.value;
+  expResult.innerText = r;
+  sauvegarderHistorique(r);
 }
 
 function ecrire() {
-  document.getElementById("textResult").innerText =
-    "Bonjour,\n\nVoici un texte clair et simple concernant votre sujet.\n\nCordialement.";
+  const r = "Voici un texte clair et simple.";
+  textResult.innerText = r;
+  sauvegarderHistorique(r);
 }
 
 function repondre() {
-  document.getElementById("mailResult").innerText =
-    "Bonjour,\n\nMerci pour votre message. Voici une réponse simple et polie.\n\nCordialement.";
+  const r = "Merci pour votre message.";
+  mailResult.innerText = r;
+  sauvegarderHistorique(r);
 }
 
 function copier(id) {
-  const t = document.getElementById(id).innerText;
-  if (!t) return;
-  navigator.clipboard.writeText(t);
+  navigator.clipboard.writeText(document.getElementById(id).innerText);
   alert("Texte copié");
 }
 
@@ -189,6 +228,7 @@ if ("serviceWorker" in navigator) {
 
 </body>
 </html>
+
 
 
 
