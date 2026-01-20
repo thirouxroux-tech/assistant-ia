@@ -1,243 +1,108 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Assistant Simple</title>
-<link rel="manifest" href="manifest.json">
+  <meta charset="UTF-8">
+  <title>Assistant IA – Simplifier un texte</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-body {
-  font-family: Arial, sans-serif;
-  background: #eef1f4;
-}
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+    }
 
-.app {
-  max-width: 720px;
-  margin: 30px auto;
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-}
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+    }
 
-h1, h2 {
-  text-align: center;
-}
+    h1 {
+      text-align: center;
+    }
 
-.menu button {
-  width: 100%;
-  padding: 15px;
-  margin: 8px 0;
-  font-size: 16px;
-  border-radius: 8px;
-  cursor: pointer;
-}
+    textarea {
+      width: 100%;
+      height: 150px;
+      padding: 10px;
+      font-size: 16px;
+    }
 
-textarea, input {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-}
+    button {
+      margin-top: 10px;
+      padding: 10px 15px;
+      font-size: 16px;
+      cursor: pointer;
+    }
 
-.section {
-  display: none;
-}
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      background: #eef;
+      border-radius: 5px;
+      white-space: pre-line;
+    }
 
-.resultat {
-  background: #f0f3f6;
-  padding: 12px;
-  margin-top: 15px;
-  white-space: pre-wrap;
-  border-radius: 6px;
-}
-
-button {
-  margin-top: 10px;
-}
-
-.histo-item {
-  background: #f0f3f6;
-  padding: 10px;
-  margin-top: 8px;
-  cursor: pointer;
-  border-radius: 6px;
-}
-
-.info {
-  font-size: 14px;
-  color: #555;
-  text-align: center;
-}
-
-.counter {
-  text-align: center;
-  font-size: 14px;
-  margin-bottom: 15px;
-  color: #333;
-}
-</style>
+    .short {
+      margin-top: 10px;
+      padding: 10px;
+      background: #e0ffe0;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="app">
+  <div class="container">
+    <h1>Assistant IA</h1>
+    <p><strong>Collez un texte compliqué. On vous l’explique simplement.</strong></p>
 
-<div id="menu" class="menu">
-  <h1>Assistant Simple</h1>
-  <p class="info">Des outils simples pour écrire, comprendre et répondre</p>
-  <p id="compteur" class="counter"></p>
+    <textarea id="texte" placeholder="Collez votre texte ici..."></textarea>
 
-  <button onclick="ouvrir('simplifier')">🧠 Simplifier un texte</button>
-  <button onclick="ouvrir('resume')">📄 Résumer un texte</button>
-  <button onclick="ouvrir('expliquer')">👶 Expliquer simplement</button>
-  <button onclick="ouvrir('texte')">✍️ Écrire un texte</button>
-  <button onclick="ouvrir('email')">📩 Répondre à un email</button>
-  <button onclick="ouvrir('historique')">📜 Historique</button>
-</div>
+    <br>
 
-<div id="historique" class="section">
-  <h2>📜 Historique</h2>
-  <div id="listeHistorique"></div>
-  <button onclick="effacerHistorique()">🗑 Effacer</button>
-  <button onclick="retour()">← Menu</button>
-</div>
+    <button onclick="simplifier()">Expliquer simplement</button>
+    <button onclick="effacer()">Effacer</button>
 
-<div id="simplifier" class="section">
-  <h2>🧠 Simplifier un texte</h2>
-  <textarea id="simpInput"></textarea>
-  <button onclick="action(() => simpInput.value)">Simplifier</button>
-  <div id="simpResult" class="resultat"></div>
-  <button onclick="copier('simpResult')">📋 Copier</button>
-  <button onclick="retour()">← Menu</button>
-</div>
+    <div id="resultat" class="result"></div>
+    <div id="court" class="short"></div>
+  </div>
 
-<div id="resume" class="section">
-  <h2>📄 Résumer un texte</h2>
-  <textarea id="resInput"></textarea>
-  <button onclick="action(() => resInput.value.split('.').slice(0,2).join('.') + '.')">Résumer</button>
-  <div id="resResult" class="resultat"></div>
-  <button onclick="copier('resResult')">📋 Copier</button>
-  <button onclick="retour()">← Menu</button>
-</div>
+  <script>
+    function simplifier() {
+      const texte = document.getElementById("texte").value.trim();
 
-<div id="expliquer" class="section">
-  <h2>👶 Expliquer simplement</h2>
-  <textarea id="expInput"></textarea>
-  <button onclick="action(() => expInput.value)">Expliquer</button>
-  <div id="expResult" class="resultat"></div>
-  <button onclick="copier('expResult')">📋 Copier</button>
-  <button onclick="retour()">← Menu</button>
-</div>
+      if (texte === "") {
+        alert("Veuillez coller un texte.");
+        return;
+      }
 
-<div id="texte" class="section">
-  <h2>✍️ Écrire un texte</h2>
-  <input id="sujet" placeholder="Sujet">
-  <button onclick="action(() => 'Texte clair sur : ' + sujet.value)">Générer</button>
-  <div id="textResult" class="resultat"></div>
-  <button onclick="copier('textResult')">📋 Copier</button>
-  <button onclick="retour()">← Menu</button>
-</div>
+      document.getElementById("resultat").innerText =
+        "Explication simple :\n" +
+        "Ce texte a bien été pris en compte.\n\n" +
+        "L’objectif de cette application est d’expliquer les textes compliqués avec des mots simples.\n" +
+        "La version intelligente sera disponible prochainement.";
 
-<div id="email" class="section">
-  <h2>📩 Répondre à un email</h2>
-  <textarea id="mailInput"></textarea>
-  <button onclick="action(() => 'Merci pour votre message.')">Répondre</button>
-  <div id="mailResult" class="resultat"></div>
-  <button onclick="copier('mailResult')">📋 Copier</button>
-  <button onclick="retour()">← Menu</button>
-</div>
+      document.getElementById("court").innerText =
+        "En bref : ce texte est enregistré et sera expliqué simplement.";
+    }
 
-</div>
-
-<script>
-const MAX = 5;
-
-function getData() {
-  return JSON.parse(localStorage.getItem("usage")) || {date:"",count:0};
-}
-
-function saveData(d){ localStorage.setItem("usage",JSON.stringify(d)); }
-
-function canUse(){
-  const today = new Date().toDateString();
-  let d = getData();
-  if(d.date !== today){ d = {date:today,count:0}; saveData(d); }
-  return d.count < MAX;
-}
-
-function useOnce(){
-  let d = getData();
-  d.count++;
-  saveData(d);
-  updateCounter();
-}
-
-function updateCounter(){
-  const d = getData();
-  document.getElementById("compteur").innerText =
-    "Utilisations restantes aujourd’hui : " + (MAX - d.count);
-}
-
-updateCounter();
-
-function cacherTout(){
-  document.querySelectorAll('.section').forEach(s=>s.style.display="none");
-  menu.style.display="none";
-}
-
-function ouvrir(id){
-  cacherTout();
-  document.getElementById(id).style.display="block";
-  if(id==="historique") afficherHistorique();
-}
-
-function retour(){
-  cacherTout();
-  menu.style.display="block";
-}
-
-function action(fn){
-  if(!canUse()){ alert("Limite atteinte. Revenez demain."); return; }
-  const r = fn();
-  document.querySelector(".section[style*='block'] .resultat").innerText = r;
-  sauvegarder(r);
-  useOnce();
-}
-
-function sauvegarder(t){
-  let h = JSON.parse(localStorage.getItem("historique")) || [];
-  h.unshift(t);
-  localStorage.setItem("historique",JSON.stringify(h.slice(0,20)));
-}
-
-function afficherHistorique(){
-  const z = listeHistorique;
-  z.innerHTML="";
-  (JSON.parse(localStorage.getItem("historique"))||[]).forEach(t=>{
-    const d=document.createElement("div");
-    d.className="histo-item";
-    d.innerText=t.substring(0,80)+"...";
-    d.onclick=()=>alert(t);
-    z.appendChild(d);
-  });
-}
-
-function effacerHistorique(){
-  localStorage.removeItem("historique");
-  afficherHistorique();
-}
-
-function copier(id){
-  navigator.clipboard.writeText(document.getElementById(id).innerText);
-  alert("Texte copié");
-}
-
-if("serviceWorker"in navigator){
-  navigator.serviceWorker.register("service-worker.js");
-}
-</script>
+    function effacer() {
+      document.getElementById("texte").value = "";
+      document.getElementById("resultat").innerText = "";
+      document.getElementById("court").innerText = "";
+    }
+  </script>
 
 </body>
 </html>
+
 
 
 
