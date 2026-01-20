@@ -1,187 +1,127 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Assistant IA</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Assistant IA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      margin: 0;
-    }
+<style>
+body { font-family: Arial, sans-serif; background:#f4f4f4; margin:0; }
+header { background:#222; color:white; padding:10px; display:flex; justify-content:space-around; }
+header button { background:none; border:none; color:white; font-size:16px; cursor:pointer; }
+header button:hover { text-decoration:underline; }
 
-    header {
-      background: #222;
-      color: white;
-      padding: 10px;
-      display: flex;
-      justify-content: space-around;
-    }
-
-    header button {
-      background: none;
-      color: white;
-      border: none;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    header button:hover {
-      text-decoration: underline;
-    }
-
-    .container {
-      max-width: 700px;
-      margin: auto;
-      background: white;
-      padding: 20px;
-      margin-top: 20px;
-      border-radius: 8px;
-    }
-
-    textarea {
-      width: 100%;
-      height: 140px;
-      font-size: 16px;
-      padding: 10px;
-    }
-
-    button.action {
-      margin-top: 10px;
-      padding: 10px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    .result {
-      margin-top: 15px;
-      background: #eef;
-      padding: 15px;
-      border-radius: 5px;
-      white-space: pre-line;
-    }
-
-    .short {
-      margin-top: 10px;
-      background: #e0ffe0;
-      padding: 10px;
-      border-radius: 5px;
-      font-weight: bold;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .history-item {
-      background: #f0f0f0;
-      margin-bottom: 10px;
-      padding: 10px;
-      cursor: pointer;
-      border-radius: 5px;
-    }
-  </style>
+.container { max-width:750px; margin:20px auto; background:white; padding:20px; border-radius:8px; }
+textarea { width:100%; height:150px; padding:10px; font-size:16px; }
+button.action { margin-top:10px; padding:10px; font-size:16px; cursor:pointer; }
+.result { margin-top:15px; padding:15px; background:#eef; border-radius:5px; white-space:pre-line; }
+.short { margin-top:10px; padding:10px; background:#e0ffe0; border-radius:5px; font-weight:bold; }
+.hidden { display:none; }
+.history-item { background:#eee; padding:10px; margin-bottom:10px; border-radius:5px; cursor:pointer; }
+</style>
 </head>
 
 <body>
 
 <header>
-  <button onclick="showPage('home')">Accueil</button>
-  <button onclick="showPage('simplifier')">Simplifier</button>
-  <button onclick="showPage('history')">Historique</button>
+<button onclick="showPage('home')">Accueil</button>
+<button onclick="showPage('simplifier')">Simplifier</button>
+<button onclick="showPage('resume')">Résumé</button>
+<button onclick="showPage('mail')">Aide mail</button>
+<button onclick="showPage('history')">Historique</button>
 </header>
 
-<!-- ACCUEIL -->
 <div id="home" class="container">
-  <h1>Assistant IA</h1>
-  <p>
-    <strong>Explique les textes compliqués simplement.</strong><br><br>
-    Collez un courrier, un email, un texte scolaire ou administratif.
-  </p>
+<h1>Assistant IA</h1>
+<p><strong>Un assistant simple pour comprendre et écrire.</strong></p>
+<ul>
+<li>Expliquer des textes compliqués</li>
+<li>Résumer rapidement</li>
+<li>Aider à écrire des emails</li>
+</ul>
 </div>
 
-<!-- SIMPLIFIER -->
 <div id="simplifier" class="container hidden">
-  <h2>Simplifier un texte</h2>
-
-  <textarea id="texte" placeholder="Collez votre texte ici..."></textarea>
-
-  <br>
-  <button class="action" onclick="simplifier()">Expliquer simplement</button>
-  <button class="action" onclick="effacer()">Effacer</button>
-
-  <div id="resultat" class="result"></div>
-  <div id="court" class="short"></div>
+<h2>Simplifier un texte</h2>
+<textarea id="texteSimplifier" placeholder="Collez votre texte ici..."></textarea>
+<button class="action" onclick="simplifier()">Expliquer simplement</button>
+<div id="resSimplifier" class="result"></div>
+<div id="courtSimplifier" class="short"></div>
 </div>
 
-<!-- HISTORIQUE -->
+<div id="resume" class="container hidden">
+<h2>Résumé de texte</h2>
+<textarea id="texteResume" placeholder="Collez votre texte ici..."></textarea>
+<button class="action" onclick="resumer()">Résumer</button>
+<div id="resResume" class="result"></div>
+</div>
+
+<div id="mail" class="container hidden">
+<h2>Aide pour écrire un mail</h2>
+<textarea id="texteMail" placeholder="Expliquez ce que vous voulez écrire..."></textarea>
+<button class="action" onclick="mail()">Générer un mail</button>
+<div id="resMail" class="result"></div>
+</div>
+
 <div id="history" class="container hidden">
-  <h2>Historique</h2>
-  <div id="listeHistorique"></div>
+<h2>Historique</h2>
+<div id="listeHistorique"></div>
 </div>
 
 <script>
-  let historique = [];
+let historique = [];
 
-  function showPage(page) {
-    document.getElementById("home").classList.add("hidden");
-    document.getElementById("simplifier").classList.add("hidden");
-    document.getElementById("history").classList.add("hidden");
-    document.getElementById(page).classList.remove("hidden");
-  }
+function showPage(p) {
+["home","simplifier","resume","mail","history"].forEach(id=>{
+document.getElementById(id).classList.add("hidden");
+});
+document.getElementById(p).classList.remove("hidden");
+}
 
-  function simplifier() {
-    const texte = document.getElementById("texte").value.trim();
-    if (texte === "") {
-      alert("Veuillez coller un texte.");
-      return;
-    }
+function simplifier() {
+let t = texteSimplifier.value.trim();
+if(!t) return alert("Collez un texte");
+let r = "Explication simple :\nCe texte a été analysé.\nIl sera expliqué avec des mots simples.\n\n(Version intelligente à venir)";
+let c = "En bref : le texte devient compréhensible.";
+resSimplifier.innerText = r;
+courtSimplifier.innerText = c;
+addHistory("Simplifier", t, r);
+}
 
-    const explication =
-      "Explication simple :\n" +
-      "Ce texte a été pris en compte.\n" +
-      "L’objectif de l’application est d’expliquer les textes compliqués avec des mots simples.\n\n" +
-      "La version intelligente sera disponible plus tard.";
+function resumer() {
+let t = texteResume.value.trim();
+if(!t) return alert("Collez un texte");
+let r = "Résumé :\n" + t.split(" ").slice(0,40).join(" ") + "...";
+resResume.innerText = r;
+addHistory("Résumé", t, r);
+}
 
-    const court =
-      "En bref : le texte est enregistré pour être expliqué simplement.";
+function mail() {
+let t = texteMail.value.trim();
+if(!t) return alert("Expliquez votre demande");
+let r =
+"Bonjour,\n\n" +
+t + "\n\n" +
+"Cordialement,\n";
+resMail.innerText = r;
+addHistory("Mail", t, r);
+}
 
-    document.getElementById("resultat").innerText = explication;
-    document.getElementById("court").innerText = court;
+function addHistory(type, texte, resultat) {
+historique.unshift({type, texte, resultat});
+renderHistory();
+}
 
-    historique.unshift({
-      texte: texte,
-      explication: explication
-    });
-
-    afficherHistorique();
-  }
-
-  function afficherHistorique() {
-    const liste = document.getElementById("listeHistorique");
-    liste.innerHTML = "";
-
-    historique.forEach((item, index) => {
-      const div = document.createElement("div");
-      div.className = "history-item";
-      div.innerText = item.texte.substring(0, 80) + "...";
-      div.onclick = () => {
-        showPage("simplifier");
-        document.getElementById("texte").value = item.texte;
-        document.getElementById("resultat").innerText = item.explication;
-        document.getElementById("court").innerText = "";
-      };
-      liste.appendChild(div);
-    });
-  }
-
-  function effacer() {
-    document.getElementById("texte").value = "";
-    document.getElementById("resultat").innerText = "";
-    document.getElementById("court").innerText = "";
-  }
+function renderHistory() {
+listeHistorique.innerHTML="";
+historique.forEach(h=>{
+let d=document.createElement("div");
+d.className="history-item";
+d.innerText = h.type + " : " + h.texte.substring(0,60)+"...";
+d.onclick=()=>alert(h.resultat);
+listeHistorique.appendChild(d);
+});
+}
 </script>
 
 </body>
